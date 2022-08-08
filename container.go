@@ -53,7 +53,8 @@ func child() {
 	check(syscall.Sethostname([]byte(NameGenerator())))
 	check(syscall.Chroot("./rootfs"))
 	check(syscall.Chdir("/"))
-	check(syscall.Mount("proc", "proc", "proc", 0, "rw"))
+	check(syscall.Mount("proc", "proc", "proc", 0, ""))
+	check(syscall.Mount("dev", "dev", "tmpfs", 0, ""))
 
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
 
@@ -63,6 +64,7 @@ func child() {
 
 	check(cmd.Run())
 	check(syscall.Unmount("/proc", 0))
+	check(syscall.Unmount("/dev", 0))
 }
 
 func cgroup() {
